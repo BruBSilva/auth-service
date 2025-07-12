@@ -1,11 +1,27 @@
 package br.edu.ifg.trilhadeaprendizadoapims.auth.util;
 
+import org.springframework.beans.factory.annotation.Value;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
+@Component
 public class Util {
 
-    public static String gerarHashMD5(String senha) {
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
+    private long expiration;
+
+    public String gerarHashMD5(String senha) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(senha.getBytes());
@@ -23,8 +39,20 @@ public class Util {
         }
     }
 
-    public static String gerarToken(String email, String role) {
-        String token = email + ":" + role;
-        return gerarHashMD5(token);
+    public String gerarToken(String email){
+        return gerarToken(email, "temporario");
+    }
+
+    public String gerarToken(String email, String role) {
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
+
+        return Jwts.builder()
+                .subject(email)
+                .claim("role", role)
+                .claim("gateway_key", "trilhadeaprendizadoapims-gateway")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 }
