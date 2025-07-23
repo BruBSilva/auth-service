@@ -26,12 +26,17 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<AuthResponseDTO> autenticar(@RequestBody @Valid AuthDTO authDTO) {
-        Auth auth = authService.autenticar(authDTO);
-        if (auth.getSenha().equals(util.gerarHashMD5(authDTO.getSenha()))) {
-            String token = util.gerarToken(auth.getEmail(), auth.getRole());
-            return ResponseEntity.ok(new AuthResponseDTO(true, token));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO(false, "Senha incorreta"));
+        try {
+            Auth auth = authService.autenticar(authDTO);
+            if (auth.getSenha().equals(util.gerarHashMD5(authDTO.getSenha()))) {
+                String token = util.gerarToken(auth.getEmail(), auth.getRole());
+                return ResponseEntity.ok(new AuthResponseDTO(true, token));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO(false, "Senha incorreta"));
+            }
+        } catch (RuntimeException e) {
+            // User not found
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO(false, "Usuário não encontrado"));
         }
     }
 }
