@@ -17,7 +17,6 @@ public class UserDataDTO {
     private String email;
     private String role;
     
-    // Student-specific fields
     private Integer xpTotal;
     private Integer nivel;
     private LocalDateTime dataCadastro;

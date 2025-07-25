@@ -35,7 +35,6 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO(false, "Senha incorreta"));
             }
         } catch (RuntimeException e) {
-            // User not found
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO(false, "Usuário não encontrado"));
         }
     }
