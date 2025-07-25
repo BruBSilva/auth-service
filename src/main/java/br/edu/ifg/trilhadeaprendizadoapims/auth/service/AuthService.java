@@ -8,7 +8,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService {
@@ -26,22 +25,31 @@ public class AuthService {
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         try {
-            return restTemplate.exchange(
+            ResponseEntity<Auth> response = restTemplate.exchange(
                     "http://localhost:8080/usuario/aluno/email/" + authDTO.getEmail(),
                     HttpMethod.GET,
                     entity,
                     Auth.class
-            ).getBody();
+            );
+            
+            Auth auth = response.getBody();
+            auth.setRole("ALUNO");
+            return auth;
+            
         } catch (HttpClientErrorException.NotFound notFoundAluno) {
             try {
-                return restTemplate.exchange(
+                ResponseEntity<Auth> response = restTemplate.exchange(
                         "http://localhost:8080/usuario/admin/email/" + authDTO.getEmail(),
                         HttpMethod.GET,
                         entity,
                         Auth.class
-                ).getBody();
+                );
+                
+                Auth auth = response.getBody();
+                auth.setRole("ADMIN");
+                return auth;
             } catch (HttpClientErrorException.NotFound notFoundAdm) {
-                throw new RuntimeException(notFoundAdm.getMessage());
+                throw new RuntimeException("Usuário não encontrado: " + authDTO.getEmail());
             }
         }
     }
