@@ -25,29 +25,20 @@ public class AuthService {
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<Auth> response = restTemplate.exchange(
+            return restTemplate.exchange(
                     "http://localhost:8080/usuario/aluno/email/" + authDTO.getEmail(),
                     HttpMethod.GET,
                     entity,
                     Auth.class
-            );
-            
-            Auth auth = response.getBody();
-            auth.setRole("ALUNO");
-            return auth;
-            
+            ).getBody();
         } catch (HttpClientErrorException.NotFound notFoundAluno) {
             try {
-                ResponseEntity<Auth> response = restTemplate.exchange(
+                return restTemplate.exchange(
                         "http://localhost:8080/usuario/admin/email/" + authDTO.getEmail(),
                         HttpMethod.GET,
                         entity,
                         Auth.class
-                );
-                
-                Auth auth = response.getBody();
-                auth.setRole("ADMIN");
-                return auth;
+                ).getBody();
             } catch (HttpClientErrorException.NotFound notFoundAdm) {
                 throw new RuntimeException("Usuário não encontrado: " + authDTO.getEmail());
             }
