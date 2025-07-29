@@ -12,7 +12,8 @@ import lombok.Setter;
 public class AuthResponseDTO {
     private boolean success;
     private String token;
-    private UserDataDTO user;
+    private String user;
+    private String role;
     private String message;
     
     public AuthResponseDTO(boolean success, String message) {
@@ -20,9 +21,10 @@ public class AuthResponseDTO {
         this.message = message;
     }
     
-    public AuthResponseDTO(boolean success, String token, UserDataDTO user) {
+    public AuthResponseDTO(boolean success, String token, String user, String role) {
         this.success = success;
         this.token = token;
         this.user = user;
+        this.role = role;
     }
 }

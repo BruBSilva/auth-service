@@ -30,7 +30,7 @@ public class AuthController {
             Auth auth = authService.autenticar(authDTO);
             if (auth.getSenha().equals(util.gerarHashMD5(authDTO.getSenha()))) {
                 String token = util.gerarToken(auth.getEmail(), auth.getRole());
-                return ResponseEntity.ok(new AuthResponseDTO(true, token));
+                return ResponseEntity.ok(new AuthResponseDTO(true, token, auth.getEmail(), auth.getRole()));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponseDTO(false, "Senha incorreta"));
             }
