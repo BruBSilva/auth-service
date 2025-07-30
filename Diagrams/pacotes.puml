@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+title Estrutura de Pacotes do Serviço de Autenticação
+
+' Organização de pacotes
+package br {
+    package edu {
+        package ifg {
+              package trilhadeaprendizagemapi {
+                    package config {
+                        class Configuracao
+                        class GatewayAccessFilter
+                    }
+
+                    package controller {
+                        class AuthController
+                    }
+
+                    package dto {
+                        class AuthDTO
+                        class AuthResponseDTO
+                        class UserDataDTO
+                    }
+
+                    package model {
+                        class Auth
+                    }
+
+                    package service {
+                        class AuthService
+                    }
+
+                    package util {
+                        class Util
+                    }
+              }
+        }
+    }
+}
+@enduml
