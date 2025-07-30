@@ -41,7 +41,6 @@ class AuthServiceTests {
         Auth alunoAuth = new Auth();
         alunoAuth.setEmail(email);
 
-        // AuthService agora faz chamadas diretas sem token (endpoints públicos)
         when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/aluno/email/" + email),
                 eq(Auth.class)
@@ -61,7 +60,6 @@ class AuthServiceTests {
         Auth adminAuth = new Auth();
         adminAuth.setEmail(email);
 
-        // Simula aluno não encontrado e admin encontrado
         when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/aluno/email/" + email),
                 eq(Auth.class)
@@ -83,7 +81,6 @@ class AuthServiceTests {
         AuthDTO authDTO = new AuthDTO();
         authDTO.setEmail(email);
 
-        // Simula aluno e admin não encontrados
         when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/aluno/email/" + email),
                 eq(Auth.class)
