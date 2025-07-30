@@ -41,16 +41,10 @@ class AuthServiceTests {
         Auth alunoAuth = new Auth();
         alunoAuth.setEmail(email);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer fake-token");
-
-        when(util.gerarToken(email)).thenReturn("fake-token");
-        when(restTemplate.exchange(
+        when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/aluno/email/" + email),
-                eq(HttpMethod.GET),
-                any(HttpEntity.class),
                 eq(Auth.class)
-        )).thenReturn(new ResponseEntity<>(alunoAuth, HttpStatus.OK));
+        )).thenReturn(alunoAuth);
 
         Auth result = authService.autenticar(authDTO);
 
@@ -66,23 +60,15 @@ class AuthServiceTests {
         Auth adminAuth = new Auth();
         adminAuth.setEmail(email);
 
-        when(util.gerarToken(email)).thenReturn("fake-token");
-
-        // Simula aluno não encontrado
-        when(restTemplate.exchange(
+        when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/aluno/email/" + email),
-                eq(HttpMethod.GET),
-                any(HttpEntity.class),
                 eq(Auth.class)
         )).thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "Not Found", null, null, null));
 
-        // Admin encontrado
-        when(restTemplate.exchange(
+        when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/admin/email/" + email),
-                eq(HttpMethod.GET),
-                any(HttpEntity.class),
                 eq(Auth.class)
-        )).thenReturn(new ResponseEntity<>(adminAuth, HttpStatus.OK));
+        )).thenReturn(adminAuth);
 
         Auth result = authService.autenticar(authDTO);
 
@@ -95,20 +81,13 @@ class AuthServiceTests {
         AuthDTO authDTO = new AuthDTO();
         authDTO.setEmail(email);
 
-        when(util.gerarToken(email)).thenReturn("fake-token");
-
-        // Simula aluno e admin não encontrados
-        when(restTemplate.exchange(
+        when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/aluno/email/" + email),
-                eq(HttpMethod.GET),
-                any(HttpEntity.class),
                 eq(Auth.class)
         )).thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "Not Found", null, null, null));
 
-        when(restTemplate.exchange(
+        when(restTemplate.getForObject(
                 eq("http://localhost:8080/usuario/admin/email/" + email),
-                eq(HttpMethod.GET),
-                any(HttpEntity.class),
                 eq(Auth.class)
         )).thenThrow(HttpClientErrorException.create(HttpStatus.NOT_FOUND, "Not Found", null, null, null));
 

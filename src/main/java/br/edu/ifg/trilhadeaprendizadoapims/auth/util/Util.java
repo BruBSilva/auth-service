@@ -39,10 +39,6 @@ public class Util {
         }
     }
 
-    public String gerarToken(String email){
-        return gerarToken(email, "temporario");
-    }
-
     public String gerarToken(String email, String role) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
 
