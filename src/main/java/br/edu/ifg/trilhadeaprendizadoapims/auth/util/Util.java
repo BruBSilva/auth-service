@@ -39,13 +39,16 @@ public class Util {
         }
     }
 
+    public String gerarToken(String email) {
+        return gerarToken(email, "temporario");
+    }
+
     public String gerarToken(String email, String role) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
 
         return Jwts.builder()
                 .subject(email)
                 .claim("role", role)
-                .claim("gateway_key", "trilhadeaprendizadoapims-gateway")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key, SignatureAlgorithm.HS256)

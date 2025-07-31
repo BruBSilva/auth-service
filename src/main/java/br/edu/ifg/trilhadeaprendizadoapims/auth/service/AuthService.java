@@ -19,17 +19,26 @@ public class AuthService {
     private Util util;
 
     public Auth autenticar(AuthDTO authDTO) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + util.gerarToken(authDTO.getEmail()));
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
         try {
-            return restTemplate.getForObject(
+            return restTemplate.exchange(
                     "http://localhost:8080/usuario/aluno/email/" + authDTO.getEmail(),
+                    HttpMethod.GET,
+                    entity,
                     Auth.class
-            );
+            ).getBody();
         } catch (HttpClientErrorException.NotFound notFoundAluno) {
             try {
-                return restTemplate.getForObject(
+                return restTemplate.exchange(
                         "http://localhost:8080/usuario/admin/email/" + authDTO.getEmail(),
+                        HttpMethod.GET,
+                        entity,
                         Auth.class
-                );
+                ).getBody();
             } catch (HttpClientErrorException.NotFound notFoundAdm) {
                 throw new RuntimeException("Usuário não encontrado: " + authDTO.getEmail());
             }
