@@ -20,6 +20,8 @@ public class AuthService {
 
     public Auth autenticar(AuthDTO authDTO) {
 
+        //Cria os headers com o token de autenticação temporario para a requisição de /auth
+        //já que antes de autenticar o usuário, não temos um token válido
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + util.gerarToken(authDTO.getEmail()));
         HttpEntity<?> entity = new HttpEntity<>(headers);
