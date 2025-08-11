@@ -18,7 +18,7 @@ public class AuthService {
     @Autowired
     private Util util;
 
-    public Auth autenticar(AuthDTO authDTO) {
+    public Auth cautenticar(AuthDTO authDTO) {
 
         //Cria os headers com o token de autenticação temporario para a requisição de /auth
         //já que antes de autenticar o usuário, não temos um token válido
