@@ -4,6 +4,7 @@ import br.edu.ifg.trilhadeaprendizadoapims.auth.dto.AuthDTO;
 import br.edu.ifg.trilhadeaprendizadoapims.auth.model.Auth;
 import br.edu.ifg.trilhadeaprendizadoapims.auth.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -18,6 +19,9 @@ public class AuthService {
     @Autowired
     private Util util;
 
+    @Value("${gateway.url}")
+    private String gatewayUrl;
+
     public Auth autenticar(AuthDTO authDTO) {
 
         //Cria os headers com o token de autenticação temporario para a requisição de /auth
@@ -28,7 +32,7 @@ public class AuthService {
 
         try {
             return restTemplate.exchange(
-                    "http://localhost:8080/usuario/aluno/email/" + authDTO.getEmail(),
+                    gatewayUrl + "/usuario/aluno/email/" + authDTO.getEmail(),
                     HttpMethod.GET,
                     entity,
                     Auth.class
@@ -36,7 +40,7 @@ public class AuthService {
         } catch (HttpClientErrorException.NotFound notFoundAluno) {
             try {
                 return restTemplate.exchange(
-                        "http://localhost:8080/usuario/admin/email/" + authDTO.getEmail(),
+                        gatewayUrl + "/usuario/admin/email/" + authDTO.getEmail(),
                         HttpMethod.GET,
                         entity,
                         Auth.class
